@@ -4,7 +4,7 @@ useradd roboshop
 rm -rf catalogue
 curl -s -L -o /tmp/catalogue.zip "https://github.com/roboshop-devops-project/catalogue/archive/main.zip"
 cd /home/roboshop
-unzip -o /tmp/catalogue.zip
+unzip /tmp/catalogue.zip
 mv catalogue-main catalogue
 cd catalogue
 npm install

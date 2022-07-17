@@ -11,3 +11,4 @@ sed -i -e '/catalogue/ s/localhost/catalogue-1.roboshop.internal/' /etc/nginx/de
 systemctl restart nginx
 
 
+
