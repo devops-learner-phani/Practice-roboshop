@@ -1,5 +1,5 @@
 frontend:
-	echo components/frontend.sh
+	bash components/frontend.sh
 mongodb:
 	echo components/mongodb.sh
 catalogue:
