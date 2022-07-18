@@ -1,1 +1,19 @@
-echo Install Payment Component
+yum install python36 gcc python3-devel -y
+useradd roboshop
+curl -s -L -o /tmp/payment.zip https://github.com/roboshop-devops-project/payment/archive/main.zip
+cd /home/roboshop
+rm -rf payment
+unzip /tmp/payment.zip
+mv payment-main payment
+cd payment
+pip3 install -r requirements.txt
+USER_ID=$(id -u roboshop)
+GROUP_ID=$(id -g roboshop)
+sed -i -e "/^uid/ c uid=${USER_ID}" -e "/^gid/ c gid=${GROUP_ID}" /home/roboshop/payment/payment.ini
+sed -i -e 's/CARTHOST/cart-1.roboshop.internal/' -e 's/USERHOST/user-1.roboshop.internal/' -e 's/AMQPHOST/rabbitmq-1.roboshop.internal/' /home/roboshop/payment/systemd.service
+mv /home/roboshop/payment/systemd.service /etc/systemd/system/payment.service
+systemctl daemon-reload payment
+systemctl enable payment
+systemctl start payment
+
+
