@@ -12,4 +12,4 @@ sed -i -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/REDIS_ENDP
 mv /home/roboshop/cart/systemd.service  /etc/systemd/system/cart.service
 systemctl daemon-reload
 systemctl enable cart
-systemctl start cart
+systemctl restart cart

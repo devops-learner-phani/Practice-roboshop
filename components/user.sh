@@ -12,4 +12,4 @@ sed -i -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/r
 mv /home/roboshop/user/systemd.service  /etc/systemd/system/user.service
 systemctl daemon-reload
 systemctl enable user
-systemctl start user
+systemctl restart user
