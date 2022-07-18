@@ -14,6 +14,6 @@ sed -i -e 's/CARTHOST/cart-1.roboshop.internal/' -e 's/USERHOST/user-1.roboshop.
 mv /home/roboshop/payment/systemd.service /etc/systemd/system/payment.service
 systemctl daemon-reload 
 systemctl enable payment
-systemctl start payment
+systemctl restart payment
 
 
