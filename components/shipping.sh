@@ -1,3 +1,9 @@
+source components/common.sh
+
+CHECK_ROOT
+
+
+
 yum install maven -y
 useradd roboshop
 curl -s -L -o /tmp/shipping.zip https://github.com/roboshop-devops-project/shipping/archive/main.zip

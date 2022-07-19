@@ -1,3 +1,10 @@
+source components/common.sh
+
+CHECK_ROOT
+
+
+
+
 yum install python36 gcc python3-devel -y
 useradd roboshop
 cd /home/roboshop

@@ -1,3 +1,9 @@
+source components/common.sh
+
+CHECK_ROOT
+
+
+
 yum install golang -y
 useradd roboshop
 rm -rf dispatch
