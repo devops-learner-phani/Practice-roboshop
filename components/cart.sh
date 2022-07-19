@@ -2,9 +2,11 @@ source components/common.sh
 
 CHECK_ROOT
 
+echo "setting up nodejs is "
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash
 if [ $? -ne 0 ]; then
   echo -e  "\e[31mPRINT it is a FAILURE\e[0m"
+  exit 2
 else
   echo -e "\e[32mSUCCESS\e[0m"
 fi
