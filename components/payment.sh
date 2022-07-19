@@ -5,7 +5,7 @@ CHECK_ROOT
 
 
 
-
+echo "Python installation is "
 yum install python36 gcc python3-devel -y
 if [ $? -ne 0 ]; then
   echo -e  "\e[31mPRINT it is a FAILURE\e[0m"
