@@ -18,4 +18,4 @@ CHECK_STAT() {
 
 
 LOG=/tmp/roboshop.log
-rm -r $LOG
+rm -rf $LOG
