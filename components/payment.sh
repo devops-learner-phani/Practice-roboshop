@@ -7,6 +7,12 @@ CHECK_ROOT
 
 
 yum install python36 gcc python3-devel -y
+if [ $? -ne 0 ]; then
+  echo -e  "\e[31mPRINT it is a FAILURE\e[0m"
+else
+  echo -e "\e[32mSUCCESS\e[0m"
+fi
+
 useradd roboshop
 cd /home/roboshop
 rm -rf payment
