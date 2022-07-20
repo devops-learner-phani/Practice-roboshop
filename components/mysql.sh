@@ -38,13 +38,12 @@ if [ $? -ne 0 ]; then
   CHECK_STAT $?
 fi
 
-exit
 
-curl -s -L -o /tmp/mysql.zip https://github.com/roboshop-devops-project/mysql/archive/main.zip
-cd /tmp
-unzip -o mysql.zip
-cd mysql-main
-mysql -uroot -p"${MYSQL_PASSWORD}" <${COMPONENT}.sql
+
+#curl -s -L -o /tmp/mysql.zip https://github.com/roboshop-devops-project/mysql/archive/main.zip
+#cd /tmp
+#unzip -o mysql.zip
+#mysql -uroot -p"${MYSQL_PASSWORD}" <${COMPONENT}.sql
 
 
 
