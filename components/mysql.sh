@@ -17,13 +17,13 @@ yum install mysql-community-server -y &>>${LOG}
 CHECK_STAT $?
 
 PRINT "Start Mysql"
-systemctl enable mysqld &>>${LOG} && systemctl start mysqld &>>${LOG}
+systemctl start mysqld &>>${LOG} && systemctl enable mysqld &>>${LOG}
 CHECK_STAT $?
 
 
 MYSQL_DEFAULT_PASSWORD=$( grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
 
-echo show databases | mysql -uroot -p"${MYSQL_PASSWORD}"
+echo show databases | mysql -uroot -p"${MYSQL_PASSWORD}" &>>${LOG}
 if [ $? -ne 0 ]; then
   PRINT "Reset MYSQL_DEFAULT_PASSWORD"
   echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';" | mysql  --connect-expired-password -uroot -p"${MYSQL_DEFAULT_PASSWORD}" &>>${LOG}
@@ -32,7 +32,7 @@ fi
 
 
 echo show plugins |  mysql -uroot -p"${MYSQL_PASSWORD}" 2>>${LOG} | grep validate_pasword &>>${LOG}
-if [ $? -ne 0 ]; then
+if [ $? -eq 0 ]; then
   PRINT "Uninstall validate password plugin"
   echo "uninstall plugin validate_password;" | mysql -uroot -p"${MYSQL_PASSWORD}" &>>${LOG}
   CHECK_STAT $?
