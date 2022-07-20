@@ -19,7 +19,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-
 PRINT "removing the cart content"
 rm -rf cart &>>${LOG}
 CHECK_STAT $?
@@ -28,30 +27,22 @@ PRINT "Downloading the cart content"
 curl -s -L -o /tmp/cart.zip https://github.com/roboshop-devops-project/cart/archive/main.zip &>>${LOG}
 CHECK_STAT $?
 
-cd /home/roboshop &>>${LOG}
-
-PRINT "Extracting the cart files"
-unzip -o /tmp/cart.zip &>>${LOG}
+PRINT "Extracting the cart.zip files"
+cd /home/roboshop && unzip -o /tmp/cart.zip &>>${LOG} && mv cart-main cart && cd cart
 CHECK_STAT $?
-
-mv cart-main cart &>>${LOG}
-cd /home/roboshop/cart &>>${LOG}
 
 PRINT "Install cart dependencies"
 npm install &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Setup system configuration"
-sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' /home/roboshop/cart/systemd.service &>>${LOG}
+PRINT "Update systemd configuration"
+sed -i -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/cart/systemd.service &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Setup cart configuration"
-mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG}
+PRINT "moving file to cart services"
+mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
 CHECK_STAT $?
-
-systemctl daemon-reload &>>${LOG}
-
 
 PRINT "start cart service"
-systemctl restart cart &>>${LOG} && systemctl enable cart &>>${LOG}
+systemctl enable cart &>>${LOG} && systemctl restart cart &>>${LOG}
 CHECK_STAT $?
