@@ -3,8 +3,14 @@ source components/common.sh
 CHECK_ROOT
 
 
-
+echo "Check weather curl command is "
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+if[ $? -eq 0 ]; then
+  echo -e "\e[31mFAILED\e[0m"
+else
+  echo -e "\e[32mSUCCESS\e[0m"
+fi
+  
 yum install nodejs -y
 useradd roboshop
 rm -rf cart
