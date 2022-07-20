@@ -40,16 +40,16 @@ PRINT "Install nodejs dependencies"
 npm install &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Update systemd configuration"
-sed -i -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/'  -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/'  /home/roboshop/cart/systemd.service 
-CHECK_STAT $?
+#PRINT "Update systemd configuration"
+#sed -i -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/'  -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/'  /home/roboshop/cart/systemd.service
+#CHECK_STAT $?
 
 PRINT "setup systemd configuration"
 mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG}
 CHECK_STAT $?
 
 
-systemctl daemon-reload &>>${LOG}
+systemctl daemon-reload 
 systemctl enable cart &>>${LOG}
 
 PRINT "start cart services"
