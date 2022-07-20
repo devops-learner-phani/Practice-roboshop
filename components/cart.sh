@@ -41,7 +41,7 @@ npm install &>>${LOG}
 CHECK_STAT $?
 
 PRINT "Update systemd configuration"
-sed -i -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/'  -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/'  /home/roboshop/cart/systemd.service &>>${LOG}
+sed -i -e 's/CATALOGUE_HOST/catalogue-1.roboshop.internal/'  -e 's/REDIS_HOST/redis-1.roboshop.internal/'  /home/roboshop/cart/systemd.service &>>${LOG}
 CHECK_STAT $?
 
 PRINT "setup systemd configuration"
