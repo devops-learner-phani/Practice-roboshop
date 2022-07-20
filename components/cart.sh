@@ -46,7 +46,7 @@ sed -i -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/REDIS_ENDP
 CHECK_STAT $?
 
 PRINT "moving file to cart services"
-mv /home/roboshop/cart/systemd.service  /etc/systemd/system/cart.service &>>${LOG}
+mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG}
 CHECK_STAT $?
 
 systemctl daemon-reload &>>${LOG}
