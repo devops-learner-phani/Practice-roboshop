@@ -38,12 +38,13 @@ if [ $? -eq 0 ]; then
   CHECK_STAT $?
 fi
 
+PRINT "Download Mysql content"
+curl -s -L -o /tmp/mysql.zip https://github.com/roboshop-devops-project/mysql/archive/main.zip &>>${LOG}
+CHECK_STAT $?
 
-
-#curl -s -L -o /tmp/mysql.zip https://github.com/roboshop-devops-project/mysql/archive/main.zip
-#cd /tmp
-#unzip -o mysql.zip
-#mysql -uroot -p"${MYSQL_PASSWORD}" <${COMPONENT}.sql
+PRINT "Extract mysql configuration"
+cd /tmp && unzip -o mysql.zip &>>${LOG} && mysql -uroot -p"${MYSQL_PASSWORD}" <${COMPONENT}.sql &>>${LOG}
+CHECK_STAT $?
 
 
 
