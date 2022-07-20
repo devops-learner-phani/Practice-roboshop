@@ -1,3 +1,12 @@
+
+USER_ID=$(id -u)
+if [ $USER_ID -ne 0]; then
+  echo "You are Non root user"
+  echo "You should run as root user or with sudo to script"
+  exit
+fi
+
+
 yum install maven -y
 useradd roboshop
 curl -s -L -o /tmp/shipping.zip https://github.com/roboshop-devops-project/shipping/archive/main.zip
