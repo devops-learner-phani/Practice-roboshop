@@ -8,7 +8,9 @@ CHECK_ROOT() {
 
 
 LOG=/tmp/roboshop.log
-rm -r ${LOG}
+rm -r $LOG
+
+
 
 CHECK_STAT() {
 if [ $1 -nq 0 ]; then
