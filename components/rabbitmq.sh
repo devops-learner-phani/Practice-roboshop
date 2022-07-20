@@ -2,7 +2,7 @@ source components/common.sh
 
 CHECK_ROOT
 
-if [ -z "$RABBITMQ_USER_PASSWORD" ]; then
+if [ -z "${RABBITMQ_USER_PASSWORD}" ]; then
   echo "RABBITMQ_USER_PASSWORD is needed"
   exit 1
 fi
