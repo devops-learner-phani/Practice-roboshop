@@ -11,8 +11,12 @@ yum install nodejs -y &>>${LOG}
 CHECK_STAT $?
 
 PRINT "Adding application user"
-useradd roboshop &>>${LOG}
-CHECK_STAT $?
+id roboshop &>>${LOG}
+if [ $? -ne 0 ]; then
+  useradd roboshop &>>${LOG}
+  CHECK_STAT $?
+  exit 1
+fi
 
 
 PRINT "removing the cart content"
