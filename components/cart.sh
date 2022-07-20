@@ -34,7 +34,7 @@ PRINT "Extracting the cart files"
 unzip -o /tmp/cart.zip &>>${LOG}
 CHECK_STAT $?
 
-mv cart-main cart
+mv cart-main cart &>>${LOG}
 cd cart
 
 PRINT "Install cart dependencies"
