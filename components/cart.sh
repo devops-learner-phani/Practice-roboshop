@@ -28,14 +28,14 @@ PRINT "Downloading the cart content"
 curl -s -L -o /tmp/cart.zip https://github.com/roboshop-devops-project/cart/archive/main.zip &>>${LOG}
 CHECK_STAT $?
 
-cd /home/roboshop
+cd /home/roboshop &>>${LOG}
 
 PRINT "Extracting the cart files"
 unzip /tmp/cart.zip &>>${LOG}
 CHECK_STAT $?
 
 mv cart-main cart &>>${LOG}
-cd /home/roboshop/cart
+cd /home/roboshop/cart &>>${LOG}
 
 PRINT "Install cart dependencies"
 npm install &>>${LOG}
@@ -49,7 +49,7 @@ PRINT "moving file to cart services"
 mv /home/roboshop/cart/systemd.service  /etc/systemd/system/cart.service &>>${LOG}
 CHECK_STAT $?
 
-systemctl daemon-reload
+systemctl daemon-reload &>>${LOG}
 
 
 PRINT "start cart service"
