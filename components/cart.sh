@@ -41,9 +41,11 @@ PRINT "Install cart dependencies"
 npm install &>>${LOG}
 CHECK_STAT $?
 
-exit
+PRINT "Setup system configuration"
+sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' /home/roboshop/cart/systemd.service &>>${LOG}
+CHECK_STAT $?
 
-PRINT "moving file to cart services"
+PRINT "Setup cart configuration"
 mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG}
 CHECK_STAT $?
 
