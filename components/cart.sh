@@ -29,7 +29,7 @@ curl -s -L -o /tmp/cart.zip https://github.com/roboshop-devops-project/cart/arch
 CHECK_STAT $?
 
 PRINT "Extracting the cart.zip files"
-cd /home/roboshop && unzip /tmp/cart.zip &>>${LOG} && mv cart-main cart && cd cart
+cd /home/roboshop && unzip -o /tmp/cart.zip &>>${LOG} && mv cart-main cart && cd cart
 CHECK_STAT $?
 
 PRINT "Install cart dependencies"
