@@ -2,48 +2,53 @@ source components/common.sh
 
 CHECK_ROOT
 
-PRINT "setting up nodejs "
+PRINT "Install yum repos"
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Installing the nodejs"
+PRINT "Install Nodejs"
 yum install nodejs -y &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Creating application user"
-id roboshop &>>${LOG}
-if [ $? -ne 0 ]; then
-  useradd roboshop &>>${LOG}
-fi
+PRINT "Update application user"
+useradd roboshop &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Downloading cart content"
-curl -s -L -o /tmp/cart.zip https://github.com/roboshop-devops-project/cart/archive/main.zip &>>${LOG} && cd /home/roboshop
+PRINT "Download cart content"
+curl -s -L -o /tmp/cart.zip https://github.com/roboshop-devops-project/cart/archive/main.zip &>>${LOG}
 CHECK_STAT $?
+
+cd /home/roboshop
 
 PRINT "Remove old content"
 rm -rf cart &>>${LOG}
 CHECK_STAT $?
 
 PRINT "Extract cart content"
-unzip /tmp/cart.zip &>>${LOG}  && mv cart-main cart && cd cart
+unzip /tmp/cart.zip &>>${LOG}
 CHECK_STAT $?
 
+mv cart-main cart
+cd cart
 
-PRINT "Install nodejs dependencies"
-npm install &>>${LOG}
-CHECK_STAT $?
+PRINT "Download cart dependencies"
+npm install
+CHECK_STAT $? &>>${LOG}
 
-PRINT "Update system congifuration"
+PRINT "Update systemd configuration"
 sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' /home/roboshop/cart/systemd.service &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Setup system configuration"
-mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
+PRINT "Setup systemd configuration"
+mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG}
 CHECK_STAT $?
 
 
-PRINT "restart cart service"
-systemctl enable cart &>>${LOG} && systemctl restart cart &>>${LOG}
+systemctl daemon-reload
+systemctl enable cart
+
+PRINT "Start cart services"
+systemctl restart cart &>>${LOG}
 CHECK_STAT $?
+
 
