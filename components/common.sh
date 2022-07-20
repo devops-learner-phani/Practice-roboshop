@@ -9,3 +9,4 @@ CHECK_ROOT() {
 
 LOG=/tmp/roboshop.log
 rm -r ${LOG}
+

@@ -7,7 +7,7 @@ echo "Check weather curl command is "
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
 if [ $? -nq 0 ]; then
   echo -e "\e[31mFAILED\e[0m"
-  exit 1
+  exit 2
 else
   echo -e "\e[32mSUCCESS\e[0m"
 fi
