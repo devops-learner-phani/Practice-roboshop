@@ -6,7 +6,7 @@ PRINT "Download yum repos"
 curl -s -o /etc/yum.repos.d/mongodb.repo https://raw.githubusercontent.com/roboshop-devops-project/mongodb/main/mongo.repo &>>${LOG}
 CHECK_STAT $?
 
-PRINT "Insatall Mongodb service"
+PRINT "Install Mongodb service"
 yum install mongodb-org -y &>>${LOG}
 CHECK_STAT $?
 
