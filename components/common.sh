@@ -57,7 +57,7 @@ APP_COMMON_SETUP() {
 SYSTEMD() {
 
   PRINT "Update systemd configuration"
-    sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/MONGO_DNSNAME/mongodb-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/${COMPONENT}/systemd.service &>>${LOG}
+    sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/MONGO_DNSNAME/mongodb-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/CARTENDPOINT/cart-1.roboshop.internal/' -e 's/DBHOST/mysql-1.roboshop.internal/' -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/${COMPONENT}/systemd.service &>>${LOG}
     CHECK_STAT $?
 
     PRINT "Setup systemd configuration"
@@ -150,6 +150,23 @@ GOLANG() {
   CHECK_STAT $?
 
   SYSTEMD 
+}
+
+MAVEN() {
+  
+  CHECK_ROOT
+
+  PRINT "Install maven"
+  yum install maven -y &>>${LOG}
+  CHECK_STAT $?
+
+  APP_COMMON_SETUP
+
+  PRINT "Download dependencies"
+  mvn clean package &>>${LOG} && mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar &>>${LOG}
+  CHECK_STAT $?
+
+  SYSTEMD
 }
 
 
