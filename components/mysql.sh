@@ -43,7 +43,7 @@ curl -s -L -o /tmp/mysql.zip https://github.com/roboshop-devops-project/mysql/ar
 CHECK_STAT $?
 
 PRINT "Extract mysql configuration"
-cd /tmp && unzip -o mysql.zip &>>${LOG} && cd mysql-main && mysql -uroot -p"${MYSQL_PASSWORD}" <$shipping.sql &>>${LOG}
+cd /tmp && unzip -o mysql.zip &>>${LOG} && cd mysql-main && mysql -uroot -p"${MYSQL_PASSWORD}" <shipping.sql &>>${LOG}
 CHECK_STAT $?
 
 
