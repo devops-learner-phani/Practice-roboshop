@@ -44,8 +44,8 @@ PRINT "moving file to cart services"
 mv /home/roboshop/cart/systemd.service  /etc/systemd/system/cart.service &>>${LOG}
 CHECK_STAT $?
 
-systemctl daemon-reload
-systemctl enable cart
+systemctl daemon-reload &>>${LOG}
+systemctl enable cart &>>${LOG}
 
 PRINT "start cart service"
 systemctl restart cart &>>${LOG}
