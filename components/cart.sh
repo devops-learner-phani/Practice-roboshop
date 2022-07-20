@@ -34,7 +34,7 @@ unzip -o /tmp/cart.zip &>>${LOG}
 CHECK_STAT $?
 
 mv cart-main cart
-cd cart
+cd /home/roboshop/cart
 
 PRINT "Install nodejs dependencies"
 npm install &>>${LOG}
