@@ -2,11 +2,19 @@ source components/common.sh
 
 CHECK_ROOT
 
+PRINT "Download yum repos"
+curl -s -L -o /etc/yum.repos.d/mysql.repo https://raw.githubusercontent.com/roboshop-devops-project/mysql/main/mysql.repo &>>${LOG}
+CHECK_STAT $?
 
-curl -s -L -o /etc/yum.repos.d/mysql.repo https://raw.githubusercontent.com/roboshop-devops-project/mysql/main/mysql.repo
-yum install mysql-community-server -y
-systemctl enable mysqld
-systemctl start mysqld
+PRINT "Install mysql"
+yum install mysql-community-server -y &>>${LOG}
+CHECK_STAT $?
+
+PRINT "Start Mysql"
+systemctl enable mysqld &>>${LOG} && systemctl start mysqld &>>${LOG}
+CHECK_STAT $?
+
+exit
 
 MYSQL_DEFAULT_PASSWORD=$( grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
 echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';" | mysql  --connect-expired-password -uroot -p"${MYSQL_DEFAULT_PASSWORD}"
@@ -16,7 +24,7 @@ curl -s -L -o /tmp/mysql.zip https://github.com/roboshop-devops-project/mysql/ar
 cd /tmp
 unzip -o mysql.zip
 cd mysql-main
-mysql -uroot -p"${MYSQL_PASSWORD}" <shipping.sql
+mysql -uroot -p"${MYSQL_PASSWORD}" <${COMPONENT}.sql
 
 
 
