@@ -57,7 +57,7 @@ APP_COMMON_SETUP() {
 SYSTEMD() {
 
   PRINT "Update systemd configuration"
-    sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/MONGO_DNSNAME/mongodb-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/CARTENDPOINT/cart-1.roboshop.internal/' -e 's/DBHOST/mysql-1.roboshop.internal/' -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/${COMPONENT}/systemd.service &>>${LOG}
+    sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/MONGO_DNSNAME/mongodb-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/CARTENDPOINT/cart-1.roboshop.internal/' -e 's/DBHOST/mysql-1.roboshop.internal/' -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/CARTHOST/cart-1.roboshop.internal/' -e 's/USERHOST/user-1.roboshop.internal/' -e 's/AMQPHOST/rabbitmq-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/${COMPONENT}/systemd.service &>>${LOG}
     CHECK_STAT $?
 
     PRINT "Setup systemd configuration"
@@ -164,6 +164,30 @@ MAVEN() {
 
   PRINT "Download dependencies"
   mvn clean package &>>${LOG} && mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar &>>${LOG}
+  CHECK_STAT $?
+
+  SYSTEMD
+}
+
+PYTHON() {
+
+  CHECK_ROOT
+
+  PRINT "Install python"
+  yum install python36 gcc python3-devel -y &>>${LOG}
+  CHECK_STAT $?
+
+  APP_COMMON_SETUP
+
+  PRINT "Download dependencies"
+  pip3 install -r requirements.txt &>>${LOG}
+  CHECK_STAT $?
+
+  USER_ID=$(id -u roboshop)
+  GROUP_ID=$(id -g roboshop)
+
+  PRINT "Update ${COMPONENT} configuration"
+  sed -i -e "/^uid/ c uid = ${USER_ID}" -e "/^gid/ c gid = ${GROUP_ID}" /home/roboshop/${COMPONENT}/${COMPONENT}.ini &>>${LOG}
   CHECK_STAT $?
 
   SYSTEMD
