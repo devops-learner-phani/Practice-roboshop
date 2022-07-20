@@ -49,31 +49,33 @@ NODEJS() {
   CHECK_STAT $?
 
 
-  PRINT "Download cart content"
-  curl -s -L -o /tmp/cart.zip https://github.com/roboshop-devops-project/cart/archive/main.zip &>>${LOG} && cd /home/roboshop
+  PRINT "Download ${COMPONENT} content"
+  curl -s -L -o /tmp/${COMPONENT}.zip https://github.com/roboshop-devops-project/${COMPONENT}/archive/main.zip &>>${LOG} && cd /home/roboshop
   CHECK_STAT $?
 
   PRINT "Remove old content"
-  rm -rf cart &>>${LOG}
+  rm -rf ${COMPONENT} &>>${LOG}
   CHECK_STAT $?
 
-  PRINT "Extract cart content"
-  unzip /tmp/cart.zip &>>${LOG} && mv cart-main cart && cd cart
+  PRINT "Extract ${COMPONENT} content"
+  unzip /tmp/${COMPONENT}.zip &>>${LOG} && mv ${COMPONENT}-main ${COMPONENT} && cd ${COMPONENT}
   CHECK_STAT $?
 
-  PRINT "Download cart dependencies"
+  PRINT "Download ${COMPONENT} dependencies"
   npm install  &>>${LOG}
   CHECK_STAT $?
 
   PRINT "Update systemd configuration"
-  sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' /home/roboshop/cart/systemd.service &>>${LOG}
+  sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/MONGO_DNSNAME/mongodb-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/${COMPONENT}/systemd.service &>>${LOG}
   CHECK_STAT $?
 
   PRINT "Setup systemd configuration"
-  mv /home/roboshop/cart/systemd.service /etc/systemd/system/cart.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
+  mv /home/roboshop/${COMPONENT}/systemd.service /etc/systemd/system/${COMPONENT}.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
   CHECK_STAT $?
 
-  PRINT "Start cart services"
-  systemctl restart cart &>>${LOG} && systemctl enable cart &>>${LOG}
+  PRINT "Start ${COMPONENT} services"
+  systemctl restart ${COMPONENT} &>>${LOG} && systemctl enable ${COMPONENT} &>>${LOG}
   CHECK_STAT $?
 }
+
+
