@@ -30,7 +30,49 @@ PRINT() {
 }
 
 
+APP_COMMON_SETUP() {
+
+  PRINT "Update application user"
+    id roboshop &>>${LOG}
+    if [ $? -ne 0 ]; then
+      useradd roboshop &>>${LOG}
+    fi
+    CHECK_STAT $?
+
+
+    PRINT "Download ${COMPONENT} content"
+    curl -s -L -o /tmp/${COMPONENT}.zip https://github.com/roboshop-devops-project/${COMPONENT}/archive/main.zip &>>${LOG} && cd /home/roboshop
+    CHECK_STAT $?
+
+    PRINT "Remove old content"
+    rm -rf ${COMPONENT} &>>${LOG}
+    CHECK_STAT $?
+
+    PRINT "Extract ${COMPONENT} content"
+    unzip /tmp/${COMPONENT}.zip &>>${LOG} && mv ${COMPONENT}-main ${COMPONENT} && cd ${COMPONENT}
+    CHECK_STAT $?
+}
+
+
+SYSTEMD() {
+
+  PRINT "Update systemd configuration"
+    sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/MONGO_DNSNAME/mongodb-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/${COMPONENT}/systemd.service &>>${LOG}
+    CHECK_STAT $?
+
+    PRINT "Setup systemd configuration"
+    mv /home/roboshop/${COMPONENT}/systemd.service /etc/systemd/system/${COMPONENT}.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
+    CHECK_STAT $?
+
+    PRINT "Start ${COMPONENT} services"
+    systemctl restart ${COMPONENT} &>>${LOG} && systemctl enable ${COMPONENT} &>>${LOG}
+    CHECK_STAT $?
+
+}
+
+
 NODEJS() {
+
   CHECK_ROOT
 
   PRINT "Install yum repos"
@@ -41,41 +83,13 @@ NODEJS() {
   yum install nodejs -y &>>${LOG}
   CHECK_STAT $?
 
-  PRINT "Update application user"
-  id roboshop &>>${LOG}
-  if [ $? -ne 0 ]; then
-    useradd roboshop &>>${LOG}
-  fi
-  CHECK_STAT $?
-
-
-  PRINT "Download ${COMPONENT} content"
-  curl -s -L -o /tmp/${COMPONENT}.zip https://github.com/roboshop-devops-project/${COMPONENT}/archive/main.zip &>>${LOG} && cd /home/roboshop
-  CHECK_STAT $?
-
-  PRINT "Remove old content"
-  rm -rf ${COMPONENT} &>>${LOG}
-  CHECK_STAT $?
-
-  PRINT "Extract ${COMPONENT} content"
-  unzip /tmp/${COMPONENT}.zip &>>${LOG} && mv ${COMPONENT}-main ${COMPONENT} && cd ${COMPONENT}
-  CHECK_STAT $?
+  APP_COMMON_SETUP
 
   PRINT "Download ${COMPONENT} dependencies"
   npm install  &>>${LOG}
   CHECK_STAT $?
 
-  PRINT "Update systemd configuration"
-  sed -i -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' -e 's/MONGO_DNSNAME/mongodb-1.roboshop.internal/' -e 's/CATALOGUE_ENDPOINT/catalogue-1.roboshop.internal/' -e 's/MONGO_ENDPOINT/mongodb-1.roboshop.internal/' -e 's/REDIS_ENDPOINT/redis-1.roboshop.internal/' /home/roboshop/${COMPONENT}/systemd.service &>>${LOG}
-  CHECK_STAT $?
-
-  PRINT "Setup systemd configuration"
-  mv /home/roboshop/${COMPONENT}/systemd.service /etc/systemd/system/${COMPONENT}.service &>>${LOG} && systemctl daemon-reload &>>${LOG}
-  CHECK_STAT $?
-
-  PRINT "Start ${COMPONENT} services"
-  systemctl restart ${COMPONENT} &>>${LOG} && systemctl enable ${COMPONENT} &>>${LOG}
-  CHECK_STAT $?
+  SYSTEMD
 }
 
 NGINX() {
@@ -119,6 +133,23 @@ NGINX() {
   PRINT "Restart nginx service"
   systemctl enable nginx &>>${LOG} && systemctl restart nginx &>>${LOG}
   CHECK_STAT $?
+}
+
+GOLANG() {
+
+  CHECK_ROOT
+
+  PRINT "Install Golang"
+  yum install golang -y
+  CHECK_STAT $?
+
+  APP_COMMON_SETUP
+
+  PRINT "Download dependencies"
+  go mod init dispatch &>>${LOG} && go get &>>${LOG} && go build &>>${LOG}
+  CHECK_STAT $?
+
+  SYSTEMD 
 }
 
 
