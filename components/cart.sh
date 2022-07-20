@@ -11,8 +11,10 @@ yum install nodejs -y &>>${LOG}
 CHECK_STAT $?
 
 PRINT "Update application user"
-useradd roboshop &>>${LOG}
-CHECK_STAT $?
+id roboshop &>>${LOG}
+if [ $? -ne 0 ]; then
+  useradd roboshop &>>${LOG}
+  CHECK_STAT $?
 
 PRINT "Download cart content"
 curl -s -L -o /tmp/cart.zip https://github.com/roboshop-devops-project/cart/archive/main.zip &>>${LOG}
