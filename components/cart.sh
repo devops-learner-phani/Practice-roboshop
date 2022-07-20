@@ -4,7 +4,7 @@ CHECK_ROOT
 
 
 echo "Check weather curl command is "
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
 if [ $? -nq 0 ]; then
   echo -e "\e[31mFAILED\e[0m"
 else
