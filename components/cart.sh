@@ -30,7 +30,7 @@ CHECK_STAT $?
 cd /home/roboshop
 
 PRINT "Extract cart content"
-unzip -o /tmp/cart.zip &>>${LOG}
+unzip /tmp/cart.zip &>>${LOG}
 CHECK_STAT $?
 
 mv cart-main cart
