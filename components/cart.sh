@@ -50,7 +50,7 @@ CHECK_STAT $?
 
 
 systemctl daemon-reload
-systemctl enable cart
+systemctl enable cart &>>${LOG}
 
 PRINT "start cart services"
 systemctl start cart &>>${LOG}
