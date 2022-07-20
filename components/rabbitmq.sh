@@ -1,9 +1,8 @@
-
 USER_ID=$(id -u)
-if [ $USER_ID -ne 0]; then
-  echo You are Non root user
-  echo You should run as root user or with sudo to script
-  exit
+if [ $USER_ID -ne 0 ]; then
+    echo You are Non root user
+    echo You should run as root user or with sudo to script
+    exit 1
 fi
 
 yum install https://github.com/rabbitmq/erlang-rpm/releases/download/v23.2.6/erlang-23.2.6-1.el7.x86_64.rpm -y
