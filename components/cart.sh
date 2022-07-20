@@ -44,6 +44,6 @@ CHECK_STAT $?
 
 
 PRINT "restart cart service"
-systemctl enable cart &>>${LOG} && systemctl restart $cart &>>${LOG}
+systemctl enable cart &>>${LOG} && systemctl restart cart &>>${LOG}
 CHECK_STAT $?
 
