@@ -36,7 +36,7 @@ mv cart-main cart
 cd cart
 
 PRINT "Download cart dependencies"
-npm install
+npm install  &>>${LOG}
 CHECK_STAT $? &>>${LOG}
 
 PRINT "Update systemd configuration"
