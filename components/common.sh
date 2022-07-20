@@ -140,7 +140,7 @@ GOLANG() {
   CHECK_ROOT
 
   PRINT "Install Golang"
-  yum install golang -y
+  yum install golang -y &>>${LOG}
   CHECK_STAT $?
 
   APP_COMMON_SETUP
