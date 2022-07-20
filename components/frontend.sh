@@ -2,17 +2,46 @@ source components/common.sh
 
 CHECK_ROOT
 
-yum install nginx -y
-systemctl enable nginx
-systemctl start nginx
-curl -s -L -o /tmp/frontend.zip https://github.com/roboshop-devops-project/frontend/archive/main.zip
+
+
+PRINT "Install nginx "
+yum install nginx -y &>>${LOG}
+CHECK_STAT $?
+
+PRINT "Start Nginx service"
+systemctl start nginx &>>${LOG} && systemctl enable nginx &>>${LOG}
+CHECK_STAT $?
+
+
+PRINT "Download frontend content"
+curl -s -L -o /tmp/frontend.zip "https://github.com/roboshop-devops-project/frontend/archive/main.zip" &>>${LOG}
+CHECK_STAT $?
+
+PRINT "remove old content"
 cd /usr/share/nginx/html
-rm -rf *
-unzip /tmp/frontend.zip
-mv frontend-main/static/* .
-mv frontend-main/localhost.conf /etc/nginx/default.d/roboshop.conf
+rm -rf * &>>${LOG}
+CHECK_STAT $?
+
+PRINT "Extract frontend content"
+unzip /tmp/frontend.zip &>>${LOG}
+CHECK_STAT $?
+
+PRINT "Organise frontend content"
+mv frontend-main/static/* . &>>${LOG}
+CHECK_STAT $?
+
+PRINT "Setup system configuration"
+mv frontend-main/localhost.conf /etc/nginx/default.d/roboshop.conf &>>${LOG}
+CHECK_STAT $?
+
+PRINT "Update frontend configuration"
 sed -i -e '/catalogue/ s/localhost/catalogue-1.roboshop.internal/' -e '/user/ s/localhost/user-1.roboshop.internal/' -e '/cart/ s/localhost/cart-1.roboshop.internal/' -e '/shipping/ s/localhost/shipping-1.roboshop.internal/' -e '/payment/ s/localhost/payment-1.roboshop.internal/' /etc/nginx/default.d/roboshop.conf
-systemctl restart nginx
+CHECK_STAT $?
+
+PRINT "Restart nginx service"
+systemctl enable nginx &>>${LOG} && systemctl restart nginx &>>${LOG}
+CHECK_STAT $?
+
 
 
 
