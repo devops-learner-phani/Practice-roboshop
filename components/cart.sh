@@ -35,7 +35,7 @@ unzip -o /tmp/cart.zip &>>${LOG}
 CHECK_STAT $?
 
 mv cart-main cart &>>${LOG}
-cd cart
+cd /home/roboshop/cart
 
 PRINT "Install cart dependencies"
 npm install &>>${LOG}
@@ -50,8 +50,8 @@ mv /home/roboshop/cart/systemd.service  /etc/systemd/system/cart.service &>>${LO
 CHECK_STAT $?
 
 systemctl daemon-reload
-systemctl enable cart &>>${LOG}
+
 
 PRINT "start cart service"
-systemctl restart cart &>>${LOG}
+systemctl restart cart &>>${LOG} && systemctl enable cart &>>${LOG}
 CHECK_STAT $?
