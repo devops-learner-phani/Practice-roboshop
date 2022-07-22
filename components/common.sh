@@ -128,8 +128,9 @@ NGINX() {
 
   for backend in cart catalogue user shipping payment; do
   PRINT "Update $backend configuration"
-  sed -i -e '/catalogue/ s/localhost/catalogue-1.roboshop.internal/' -e '/user/ s/localhost/user-1.roboshop.internal/' -e '/cart/ s/localhost/cart-1.roboshop.internal/' -e '/shipping/ s/localhost/shipping-1.roboshop.internal/' -e '/payment/ s/localhost/payment-1.roboshop.internal/' /etc/nginx/default.d/roboshop.conf
+  #sed -i -e '/catalogue/ s/localhost/catalogue-1.roboshop.internal/' -e '/user/ s/localhost/user-1.roboshop.internal/' -e '/cart/ s/localhost/cart-1.roboshop.internal/' -e '/shipping/ s/localhost/shipping-1.roboshop.internal/' -e '/payment/ s/localhost/payment-1.roboshop.internal/' /etc/nginx/default.d/roboshop.conf
   CHECK_STAT $?
+  sed -i -e "/$backend/ s/localhost/$backend.roboshop.internal" /etc/nginx/default.d/roboshop.conf
   done
 
   PRINT "Restart nginx service"
