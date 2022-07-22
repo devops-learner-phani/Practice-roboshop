@@ -126,7 +126,7 @@ NGINX() {
   mv frontend-main/localhost.conf /etc/nginx/default.d/roboshop.conf &>>${LOG}
   CHECK_STAT $?
 
-  for backend in cart catalogue user shipping payment; do
+  for backend in cart-1 catalogue-1 user-1 shipping-1 payment-1; do
   PRINT "Update $backend configuration"
   #sed -i -e '/catalogue/ s/localhost/catalogue-1.roboshop.internal/' -e '/user/ s/localhost/user-1.roboshop.internal/' -e '/cart/ s/localhost/cart-1.roboshop.internal/' -e '/shipping/ s/localhost/shipping-1.roboshop.internal/' -e '/payment/ s/localhost/payment-1.roboshop.internal/' /etc/nginx/default.d/roboshop.conf
   CHECK_STAT $?
